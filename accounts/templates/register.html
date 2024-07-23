@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <style>
+        /* Add your inline CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f0f0f0;
+            align-items: flex-start;
+        }
+        .container {
+            width: 20%;
+            margin: 0 auto;
+            padding: 60px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            align-items: center;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem 0;
+            text-align: center;
+            margin-bottom: 1rem;
+
+
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+        .error {
+            color: red;
+            font-size: 0.9em;
+        }
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #5bc0de;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .button:hover {
+            background-color: #0056b3;
+        }
+        p {
+            text-align: center;
+        }
+        #email-error {
+            display: none;  /* Initially hide the error message */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Register</h1>
+        </header>
+        <main>
+            <form method="post" enctype="multipart/form-data" action="{% url 'accounts:register' %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="{{ form.username.value|default_if_none:'' }}">
+                    {% if form.username.errors %}
+                        <div class="error">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}">
+                    {% if form.first_name.errors %}
+                        <div class="error">{{ form.first_name.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}">
+                    {% if form.last_name.errors %}
+                        <div class="error">{{ form.last_name.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address:</label>
+                    <input type="email" id="email" name="email" value="{{ form.email.value|default_if_none:'' }}">
+                    <div id="email-error" class="error">Please enter a valid email address with an @ symbol.</div>
+                    {% if form.email.errors %}
+                        <div class="error">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="password1">Password:</label>
+                    <input type="password" id="password1" name="password1">
+                    {% if form.password1.errors %}
+                        <div class="error">{{ form.password1.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="password2">Confirm Password:</label>
+                    <input type="password" id="password2" name="password2">
+                    {% if form.password2.errors %}
+                        <div class="error">{{ form.password2.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="date_of_birth">Date of Birth:</label>
+                    <input type="date" id="date_of_birth" name="date_of_birth" value="{{ form.date_of_birth.value|default_if_none:'' }}">
+                    {% if form.date_of_birth.errors %}
+                        <div class="error">{{ form.date_of_birth.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gender:</label>
+                    <select id="gender" name="gender">
+                        <option value="" {% if form.gender.value == '' %}selected{% endif %}>Select Gender</option>
+                        <option value="Male" {% if form.gender.value == 'Male' %}selected{% endif %}>Male</option>
+                        <option value="Female" {% if form.gender.value == 'Female' %}selected{% endif %}>Female</option>
+                        <option value="Other" {% if form.gender.value == 'Other' %}selected{% endif %}>Other</option>
+                    </select>
+                    {% if form.gender.errors %}
+                        <div class="error">{{ form.gender.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="phone_numbers">Phone Numbers (comma-separated):</label>
+                    <input type="text" id="phone_numbers" name="phone_numbers" value="{{ form.phone_numbers.value|default_if_none:'' }}">
+                    {% if form.phone_numbers.errors %}
+                        <div class="error">{{ form.phone_numbers.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address">{{ form.address.value|default_if_none:'' }}</textarea>
+                    {% if form.address.errors %}
+                        <div class="error">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="profile_picture">Profile Picture:</label>
+                    <input type="file" id="profile_picture" name="profile_picture">
+                    {% if form.profile_picture.errors %}
+                        <div class="error">{{ form.profile_picture.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="button">Register</button>
+            </form>
+            <p>Already have an account? <a href="{% url 'accounts:login' %}">Login here</a>.</p>
+        </main>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const emailInput = document.getElementById('email');
+            const emailError = document.getElementById('email-error');
+            
+            emailInput.addEventListener('input', function() {
+                const emailValue = emailInput.value;
+                if (emailValue && !emailValue.includes('@')) {
+                    emailError.style.display = 'block';
+                } else {
+                    emailError.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
