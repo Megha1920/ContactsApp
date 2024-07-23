@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if contact %}Edit{% else %}Create{% endif %} Contact</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .logout-button {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #d9534f;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .logout-button:hover {
+            background-color: #c9302c;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            background-color: #fff;
+            padding: 2rem;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 3rem;
+            border-radius: 8px;
+        }
+        header {
+            background: #333;
+            color: #fff;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            margin: 0;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .form-group textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .error {
+            color: red;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+        button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #5bc0de;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-right: 0.5rem;
+        }
+        button:hover {
+            background-color: #31b0d5;
+        }
+        .cancel-button {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            background-color: #d9534f;
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .cancel-button:hover {
+            background-color: #c9302c;
+        }
+        .buttons {
+            display: flex;
+            justify-content: flex-start;
+        }
+    </style>
+</head>
+<body>
+    <a href="{% url 'contacts:logout' %}" class="logout-button">Logout</a>
+    <div class="container">
+        <header>
+            <h1>{% if contact %}Edit{% else %}Create{% endif %} Contact</h1>
+        </header>
+        <main>
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ form.first_name.value|default_if_none:'' }}">
+                    {% if form.first_name.errors %}
+                        <div class="error">{{ form.first_name.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ form.last_name.value|default_if_none:'' }}">
+                    {% if form.last_name.errors %}
+                        <div class="error">{{ form.last_name.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="address">Address:</label>
+                    <textarea id="address" name="address">{{ form.address.value|default_if_none:'' }}</textarea>
+                    {% if form.address.errors %}
+                        <div class="error">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="company">Company:</label>
+                    <input type="text" id="company" name="company" value="{{ form.company.value|default_if_none:'' }}">
+                    {% if form.company.errors %}
+                        <div class="error">{{ form.company.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="phone_numbers">Phone Numbers:</label>
+                    <input type="text" id="phone_numbers" name="phone_numbers" value="{{ form.phone_numbers.value|default_if_none:'' }}">
+                    {% if form.phone_numbers.errors %}
+                        <div class="error">{{ form.phone_numbers.errors }}</div>
+                    {% endif %}
+                </div>
+                <div class="buttons">
+                    <button type="submit">{% if contact %}Update{% else %}Create{% endif %} Contact</button>
+                    <a href="{% url 'contacts:list_contacts' %}" class="cancel-button">Cancel</a>
+                </div>
+            </form>
+        </main>
+    </div>
+</body>
+</html>

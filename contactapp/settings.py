@@ -38,7 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts',
-    # 'contacts',
+    'contacts',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +129,10 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 AUTH_USER_MODEL = 'accounts.CustomUser'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Default backend
+]
+
+LOGIN_URL = 'accounts:login'  # The URL to redirect to when a user is not authenticated
+LOGIN_REDIRECT_URL = 'contacts:list_contacts' 

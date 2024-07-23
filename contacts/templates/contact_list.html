@@ -1,0 +1,110 @@
+{% load custom_filters %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            function loadContacts(page = 1) {
+                let query = $('#search').val();
+                $.ajax({
+                    url: "{% url 'contacts:list_contacts' %}",
+                    data: { 'page': page, 'q': query },
+                    success: function(data) {
+                        let contactList = $('#contact-list');
+                        contactList.empty();
+                        data.contacts.forEach(function(contact) {
+                            contactList.append(
+                                `<li style="padding: 1rem; border-bottom: 1px solid #ddd;">
+                                    <p><strong>${contact.first_name} ${contact.last_name}</strong></p>
+                                    <p>Address: ${contact.address}</p>
+                                    <p>Company: ${contact.company}</p>
+                                    <p>Phone Numbers: ${contact.phone_numbers}</p>
+                                    <a href="/contacts/${contact.id}/edit/" style="display: inline-block; padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #5bc0de; color: #fff; text-decoration: none; font-size: 0.875rem; cursor: pointer; margin-right: 0.5rem;">Edit</a>
+                                    <a href="/contacts/${contact.id}/delete/" style="display: inline-block; padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #d9534f; color: #fff; text-decoration: none; font-size: 0.875rem; cursor: pointer;">Delete</a>
+                                </li>`
+                            );
+                        });
+
+                        // Update pagination controls
+                        let pagination = $('#pagination');
+                        pagination.empty();
+
+                        for (let i = 1; i <= data.total_pages; i++) {
+                            if (i == data.page_number) {
+                                pagination.append(`<span class="page-number active">${i}</span>`);
+                            } else {
+                                pagination.append(`<a href="#" class="page-number" data-page="${i}">${i}</a>`);
+                            }
+                        }
+                    }
+                });
+            }
+
+            $('#search').on('input', function() {
+                loadContacts(1);  // Load contacts on the first page
+            });
+
+            $('#pagination').on('click', '.page-number', function(e) {
+                e.preventDefault();
+                let page = $(this).data('page');
+                loadContacts(page);
+            });
+
+            // Initial load
+            loadContacts();
+        });
+    </script>
+    <style>
+        .page-number {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            margin: 0 0.25rem;
+            text-decoration: none;
+            color: #333;
+            background-color: #f4f4f4;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .page-number.active {
+            background-color: #5bc0de;
+            color: #fff;
+            border: 1px solid #5bc0de;
+        }
+        .page-number:hover {
+            background-color: #ddd;
+        }
+    </style>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <a href="{% url 'contacts:logout' %}" style="position: fixed;top: 1rem;right: 1rem;padding: 0.75rem 1.5rem;border: none;border-radius: 4px;background-color: #d9534f;color: #fff;text-decoration: none;font-size: 1rem;cursor: pointer;z-index: 1000; /* Ensure the button stays on top */">Logout</a>
+    <div style="width: 80%; margin: auto; overflow: hidden; background-color: #fff; padding: 2rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-top: 2rem;">
+        <header style="background: #333; color: #fff; padding: 1rem 0; text-align: center; margin-bottom: 1rem;">
+            <h1 style="margin: 0;">Contact List</h1>
+            <a href="{% url 'contacts:create_contact' %}" style="display: inline-block; padding: 0.75rem 1.5rem; border: none; border-radius: 4px; background-color: #5bc0de; color: #fff; text-decoration: none; font-size: 1rem; cursor: pointer;">Create New Contact</a>
+        </header>
+        <main>
+            <input type="text" id="search" placeholder="Search contacts" style="padding: 0.75rem; border: 1px solid #ddd; border-radius: 4px; width: calc(100% - 100px);">
+            <ul id="contact-list" style="list-style: none; padding: 0;">
+                {% for contact in contacts %}
+                    <li style="padding: 1rem; border-bottom: 1px solid #ddd;">
+                        <p><strong>{{ contact.first_name }} {{ contact.last_name }}</strong></p>
+                        <p>Address: {{ contact.address }}</p>
+                        <p>Company: {{ contact.company }}</p>
+                        <p>Phone Numbers: {{ contact.phone_numbers }}</p>
+                        <a href="{% url 'contacts:edit_contact' contact.pk %}" style="display: inline-block; padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #5bc0de; color: #fff; text-decoration: none; font-size: 0.875rem; cursor: pointer; margin-right: 0.5rem;">Edit</a>
+                        <a href="{% url 'contacts:delete_contact' contact.pk %}" style="display: inline-block; padding: 0.5rem 1rem; border: none; border-radius: 4px; background-color: #d9534f; color: #fff; text-decoration: none; font-size: 0.875rem; cursor: pointer;">Delete</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            <div id="pagination" style="text-align: center; margin-top: 1rem;">
+                <!-- Page numbers will be inserted here by JavaScript -->
+            </div>
+        </main>
+    </div>
+</body>
+</html>

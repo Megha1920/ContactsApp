@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirm Delete</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 0; background-color: #f4f4f4;">
+    <div style="width: 80%; margin: auto; overflow: hidden; background-color: #fff; padding: 2rem; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); margin-top: 2rem;">
+        <header style="background: #333; color: #fff; padding: 1rem 0; text-align: center; margin-bottom: 1rem;">
+            <h1 style="margin: 0;">Confirm Delete</h1>
+        </header>
+        <main style="text-align: center;">
+            <p style="font-size: 1.1rem; margin-bottom: 1rem;">Are you sure you want to delete the contact "{{ contact.first_name }} {{ contact.last_name }}"?</p>
+            <form method="post" style="display: inline-block;">
+                {% csrf_token %}
+                <button type="submit" style="padding: 0.75rem 1.5rem; border: none; border-radius: 4px; background-color: #d9534f; color: #fff; font-size: 1rem; cursor: pointer; margin-right: 1rem;">Confirm Delete</button>
+                <a href="{% url 'contacts:list_contacts' %}" style="padding: 0.75rem 1.5rem; border: none; border-radius: 4px; background-color: #5bc0de; color: #fff; font-size: 1rem; text-decoration: none; cursor: pointer;">Cancel</a>
+            </form>
+        </main>
+    </div>
+</body>
+</html>
